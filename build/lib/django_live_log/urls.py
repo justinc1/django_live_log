@@ -1,4 +1,4 @@
-from django.conf.urls import re_path
+from django.urls import re_path
 from django.conf import settings
 from django_live_log.views import dll
 urlpatterns = [
