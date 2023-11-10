@@ -25,10 +25,11 @@ def log_streamer(request, from_=0, file_path=None):
         while True:
             newmtime = os.path.getmtime(file_path)
             if newmtime == mtime:
-                time.sleep(1)
+                time.sleep(0.1)
                 reset += 1
                 if reset >= 15:
-                    yield "<!-- empty -->"
+                    yield ""
+                    # yield "<!-- empty -->"
                 continue
             mtime = newmtime
             with open(file_path) as f:
