@@ -1,0 +1,9 @@
+.venv*
+*.pyc
+
+.DS_Store
+.idea
+
+django_live_log.egg-info
+build
+dist
