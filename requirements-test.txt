@@ -1,3 +1,5 @@
 build
 pytest
+pytest-django
+pytest-mock
 tox
