@@ -1,0 +1,39 @@
+image: registry.gitlab.com/machine-insight/base-python:3
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  # Twine should upload wheel file to https://gitlab.com/machine-insight/python-modules
+  # - ID is 13250018
+  TWINE_GITLAB_PROJECT_ID: 13250018
+  # from gitlab project settings
+  # TWINE_USERNAME=GITLAB_WRITE_PACKAGE_REGISTRY_USERNAME
+  # TWINE_PASSWORD=GITLAB_WRITE_PACKAGE_REGISTRY_PASSWORD =<personal_access_token or deploy_token>
+  # CI-testing
+
+stages:
+  - test_and_build
+  - upload
+
+test:
+  stage: test_and_build
+  script:
+    - pip install -r requirements-test.txt
+    - tox
+    # also build
+    - python -m build
+  artifacts:
+    paths:
+      - dist/
+    expose_as: dist
+    expire_in: 10 week
+
+upload:
+  image:
+    name: networktocode/twine:3.7
+    entrypoint: [""]
+  stage: upload
+  script:
+    # - pip install twine
+    - python3 -m twine upload --repository-url https://gitlab.com/api/v4/projects/${TWINE_GITLAB_PROJECT_ID}/packages/pypi dist/*
+  rules:
+    - if: $CI_COMMIT_TAG
